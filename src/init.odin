@@ -8,11 +8,8 @@ import "core:fmt"
 camera : rl.Camera2D
 font : rl.Font
 
-@(private="file")
-card_width : i32
-
-@(private="file")
-card_height : i32
+raw_card_width : i32
+raw_card_height : i32
 
 card_atlas : rl.Texture2D
 
@@ -57,7 +54,7 @@ get_card_region :: proc(card: Card) -> rl.Rectangle {
     col := card.value - 1
     row := int(card.house)
 
-    return rl.Rectangle{f32(col) * f32(card_width), f32(row) * f32(card_height), f32(card_width), f32(card_height)}
+    return rl.Rectangle{f32(col) * f32(raw_card_width), f32(row) * f32(raw_card_height), f32(raw_card_width), f32(raw_card_height)}
 }
 
 init_assets :: proc() {
@@ -79,11 +76,11 @@ init_assets :: proc() {
             img := rl.LoadImage(cstring(raw_data(path)))
 
             if first {
-                card_width = img.width
-                card_height = img.height
+                raw_card_width = img.width
+                raw_card_height = img.height
 
-                atlas_width := i32(13) * card_width
-                atlas_height := i32(4) * card_height
+                atlas_width := i32(13) * raw_card_width
+                atlas_height := i32(4) * raw_card_height
 
                 big = rl.GenImageColor(i32(atlas_width), i32(atlas_height), rl.BLANK)
                 
@@ -94,7 +91,7 @@ init_assets :: proc() {
             row := h
 
             src_rect := rl.Rectangle{0, 0, f32(img.width), f32(img.height)}
-            dst_rect := rl.Rectangle{f32(col) * f32(card_width), f32(row) * f32(card_height), f32(card_width), f32(card_height)}
+            dst_rect := rl.Rectangle{f32(col) * f32(raw_card_width), f32(row) * f32(raw_card_height), f32(raw_card_width), f32(raw_card_height)}
 
             rl.ImageDraw(&big, img, src_rect, dst_rect, rl.WHITE)
             rl.UnloadImage(img)

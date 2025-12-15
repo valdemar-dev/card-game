@@ -8,8 +8,6 @@ tick_input :: proc() {
     #partial switch game_state {
     case .MAIN_MENU:
         if rl.IsKeyPressed(.ENTER) {
-            fmt.println("starting game..")
-
             start_game()
         }
 

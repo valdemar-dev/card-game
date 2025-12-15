@@ -42,7 +42,7 @@ cpu_finish_attack :: proc() {
     defer ordered_remove(&user.card_hand, user.battle_card_idx)
     
     attack := get_card_effectiveness(attack_card^)
-    defence := get_card_effectiveness(defence_card^)
+    defence := int(f32(get_card_effectiveness(defence_card^)) / 2)
 
     fmt.println("CPU ATTACK CARD:", attack_card)
     fmt.println("USER DEFENCE CARD:", defence_card)

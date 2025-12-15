@@ -8,12 +8,8 @@ main :: proc() {
     init()
 
     for !rl.WindowShouldClose() {
-        rl.BeginDrawing()
-
-        rl.ClearBackground(rl.RAYWHITE)
 
         tick_input()
-
-        rl.EndDrawing()
+        draw()
     }
 }
