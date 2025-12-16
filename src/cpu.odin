@@ -1,10 +1,13 @@
 package main
 
+import "core:time"
 import "core:fmt"
 import "core:math/rand"
 cpu : Player
 
 cpu_choose_card :: proc() {
+    time.sleep(time.Second * 2)
+
     // get every card it can afford
     // pick one at random
     affordable_cards : [dynamic]int
