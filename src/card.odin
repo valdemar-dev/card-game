@@ -15,8 +15,21 @@ Card :: struct {
     house: CardHouse
 }
 
-get_card_effectiveness :: proc(card: Card) -> int {
-    return int(math.floor_f32(f32(card.value) / 3))
+get_card_effectiveness :: proc(card: Card) -> (value: int) {
+    #partial switch card.house {
+    case .SPADES:
+        value = int(math.floor_f32(f32(card.value) / 3)) + 1
+        break
+    case .HEARTS:
+        value = int(math.floor_f32(f32(card.value) / 4))
+        break
+    case .CLUBS:
+        value = 1
+    case .DIAMONDS:
+        value = int(math.floor_f32(f32(card.value) / 5))
+    }
+
+    return
 }
 
 get_card_cost :: proc(card: Card) -> int {

@@ -59,6 +59,7 @@ get_card_region :: proc(card: Card) -> rl.Rectangle {
 
 init_assets :: proc() {
     font = rl.LoadFont("./src/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf")
+    rl.GuiSetFont(font)
 
     big: rl.Image
     first := true

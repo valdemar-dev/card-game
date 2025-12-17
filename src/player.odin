@@ -13,7 +13,7 @@ pass_turn_to :: proc(player: ^Player) {
 start_player_turn :: proc(player: ^Player) {
     player^.gold = 2
 
-    if len(player.card_hand) < 7 {
+    for len(player.card_hand) < 7 {
         append(&(player^.card_hand), get_random_card())
     }
 }

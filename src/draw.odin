@@ -1,12 +1,13 @@
 package main
 
+import "core:strings"
 import "core:fmt"
 import rl "vendor:raylib"
 
 draw :: proc() {
     rl.BeginDrawing()
 
-    rl.ClearBackground(rl.RAYWHITE)
+    rl.ClearBackground(rl.BLACK)
 
     #partial switch game_state {
     case .MAIN_MENU:
@@ -25,9 +26,7 @@ draw :: proc() {
 draw_game :: proc() {
     draw_cards()
 
-    draw_user_stats()
-    draw_cpu_stats()
-
+    draw_stats()
 }
 
 draw_cards :: proc() {
@@ -38,7 +37,7 @@ draw_cards :: proc() {
     card_height := card_width * raw_card_aspect
 
     padding_x :: 20
-    padding_y :: 80
+    padding_y :: 100
 
     // user cards
     {
@@ -91,16 +90,63 @@ draw_cards :: proc() {
     }
 }
 
-draw_user_stats :: proc() {}
+draw_stats :: proc() {
+    width, height := f32(rl.GetRenderWidth()), f32(rl.GetRenderHeight())
 
-draw_cpu_stats :: proc() {
+    padding_x :: 20
+    padding_y :: 20
 
+    // draw user stats
+    {
+        sb := strings.builder_make()
+        defer strings.builder_destroy(&sb)
+
+        {
+            strings.write_string(&sb, "Crown Health:")
+            strings.write_int(&sb, user.crown_health)
+
+            strings.write_string(&sb, "\nGold:")
+            strings.write_int(&sb, user.gold)
+        }
+
+        user_stats_pos := rl.Vector2{
+            padding_x,
+            height - padding_y * 3,
+        }
+
+        pen := user_stats_pos
+
+        rl.DrawTextPro(font, strings.to_cstring(&sb), pen, rl.Vector2{}, 0, 20, 1.5, rl.WHITE)
+    }
+
+    // draw cpu stats
+    {
+        cpu_stats_pos := rl.Vector2{
+            padding_x,
+            padding_y,
+        }
+
+        pen := cpu_stats_pos
+
+        sb := strings.builder_make()
+        defer strings.builder_destroy(&sb)
+
+        {
+            strings.write_string(&sb, "Crown Health:")
+            strings.write_int(&sb, cpu.crown_health)
+
+            strings.write_string(&sb, "\nGold:")
+            strings.write_int(&sb, cpu.gold)
+        }
+
+        rl.DrawTextPro(font, strings.to_cstring(&sb), pen, rl.Vector2{}, 0, 20, 1.5, rl.WHITE)
+    }
 }
 
 draw_game_over :: proc() {
-    rl.DrawTextPro(font, "The game has ended", rl.Vector2{}, rl.Vector2{}, 0, 20, 1.5, rl.BLACK)
+    rl.DrawTextPro(font, "The game has ended", rl.Vector2{}, rl.Vector2{}, 0, 20, 1.5, rl.WHITE)
 }
 
 draw_main_menu :: proc() {
-    rl.DrawTextPro(font, "Press Enter to start the game", rl.Vector2{}, rl.Vector2{}, 0, 20, 1.5, rl.BLACK)
+    rl.DrawTextPro(font, "Press Enter to start the game", rl.Vector2{}, rl.Vector2{}, 0, 20, 1.5, rl.WHITE)
 }
