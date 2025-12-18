@@ -22,6 +22,7 @@ cpu_choose_card :: proc() {
         pass_turn_to(&user)
         
         fmt.println("CPU PASSING TURN TO USER")
+        
         return
     }
 
