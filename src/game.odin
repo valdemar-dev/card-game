@@ -21,6 +21,7 @@ GameState :: enum {
 
 game_state : GameState = .MAIN_MENU
 
+turn_count : int
 
 Player :: struct {
     card_hand: [dynamic]Card,

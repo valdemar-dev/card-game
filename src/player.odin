@@ -1,6 +1,8 @@
 package main
 
 pass_turn_to :: proc(player: ^Player) {
+    turn_count += 1
+
     if player == &cpu {
         game_state = .CPU_CHOOSE_CARD
         start_player_turn(&cpu)
@@ -11,9 +13,9 @@ pass_turn_to :: proc(player: ^Player) {
 }
 
 start_player_turn :: proc(player: ^Player) {
-    player^.gold = 2
+    player^.gold = min(turn_count, 10)
 
-    for len(player.card_hand) < 7 {
+    for i := 0; i < 3 && len(player.card_hand) < 7; i += 1 {
         append(&(player^.card_hand), get_random_card())
     }
 }

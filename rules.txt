@@ -1,0 +1,4 @@
+At the start of each turn, players draw cards i 0..<3 && len(cards) < 7.
+At the start of each turn, players gold is set to min(round_count, 10) 
+
+Maximum possible gold is 12.
