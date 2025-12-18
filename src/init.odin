@@ -68,7 +68,7 @@ init_assets :: proc() {
         house := CardHouse(h)
         
         for v in 1..=13 {
-            card := Card{v, house}
+            card := Card{v, house, 0}
 
             filename := get_card_filename(card)
             defer delete(filename)

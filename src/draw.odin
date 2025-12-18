@@ -60,7 +60,9 @@ draw_cards :: proc() {
                 card_height,
             }
 
-            rl.DrawTexturePro(card_atlas, src, dst, rl.Vector2{}, 0, rl.WHITE)
+            color := card.remaining_disabled_turns > 0 ? rl.GRAY : rl.WHITE
+
+            rl.DrawTexturePro(card_atlas, src, dst, rl.Vector2{}, 0, color)
         }   
     }
 
@@ -85,7 +87,9 @@ draw_cards :: proc() {
                 card_height,
             }
 
-            rl.DrawTexturePro(card_atlas, src, dst, rl.Vector2{}, 0, rl.WHITE)
+            color := card.remaining_disabled_turns > 0 ? rl.GRAY : rl.WHITE
+
+            rl.DrawTexturePro(card_atlas, src, dst, rl.Vector2{}, 0, color)
         }   
     }
 }

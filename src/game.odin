@@ -31,13 +31,12 @@ Player :: struct {
     battle_card_idx: int,
 }
 
+// a pointer to the first person who held a turn in the game.
+// is used for knowing when a "full turn" has occured.
+first_turn_holder : ^Player
+
 game_thread : ^thread.Thread
 start_game :: proc() {
-    game_state = .PLAYER_CHOOSE_CARD
-
-    game_thread = thread.create(tick_game)
-    thread.start(game_thread)
-
     // init cpu
     {
         clear(&cpu.card_hand)
@@ -59,6 +58,13 @@ start_game :: proc() {
         user.crown_health = 15
         user.name = "USER"
     }
+
+    game_state = .PLAYER_CHOOSE_CARD
+
+    game_thread = thread.create(tick_game)
+    thread.start(game_thread)
+
+    first_turn_holder = &user
 }
 
 tasks : [dynamic]proc()
@@ -99,8 +105,26 @@ tick_game :: proc(thread: ^thread.Thread) {
     }
 }
 
+increment_turn :: proc() {
+    turn_count += 1
+
+    for &card in user.card_hand {
+        if card.remaining_disabled_turns > 0 {
+            card.remaining_disabled_turns -= 1
+        }
+    }
+
+    for &card in cpu.card_hand {
+        if card.remaining_disabled_turns > 0 {
+            card.remaining_disabled_turns -= 1
+        }
+    }
+}
+
 end_game :: proc(state: GameState) {
     game_state = state
+
+    first_turn_holder = nil
 
     fmt.println("GAME HAS ENDED:", state)
 }

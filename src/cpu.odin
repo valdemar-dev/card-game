@@ -43,6 +43,9 @@ cpu_finish_attack :: proc() {
     defence_card := &user.card_hand[user.battle_card_idx]
     defer user.battle_card_idx = -1
     defer ordered_remove(&user.card_hand, user.battle_card_idx)
+
+    if defence_card.remaining_disabled_turns > 0 do panic("Disabled card used at defence card for user.")
+    if attack_card.remaining_disabled_turns > 0 do panic("Disabled card used at attack card for cpu.")
     
     attack := get_card_effectiveness(attack_card^)
     defence := int(f32(get_card_effectiveness(defence_card^)) / 2)

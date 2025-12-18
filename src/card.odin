@@ -12,21 +12,22 @@ CardHouse :: enum {
 
 Card :: struct {
     value: int,
-    house: CardHouse
+    house: CardHouse,
+    remaining_disabled_turns: int,
 }
 
 get_card_effectiveness :: proc(card: Card) -> (value: int) {
     #partial switch card.house {
     case .SPADES:
-        value = int(math.floor_f32(f32(card.value) / 3)) + 1
+        value = int(math.floor(f32(card.value) / 3)) + 1
         break
     case .HEARTS:
-        value = int(math.floor_f32(f32(card.value) / 4))
+        value = int(math.floor(f32(card.value) / 4))
         break
     case .CLUBS:
-        value = 1
+        value = int(math.floor(f32(card.value) / 4))
     case .DIAMONDS:
-        value = int(math.floor_f32(f32(card.value) / 5))
+        value = int(math.floor(f32(card.value) / 5))
     }
 
     return
@@ -35,7 +36,7 @@ get_card_effectiveness :: proc(card: Card) -> (value: int) {
 get_card_cost :: proc(card: Card) -> int {
     if card.house == .DIAMONDS do return 0
 
-    return max(int(math.ceil_f32(f32(card.value) / 5)), 1)
+    return max(int(math.ceil(f32(card.value) / 5)), 1)
 }
 
 get_random_card :: proc() -> Card {
@@ -66,6 +67,12 @@ use_card :: proc(player: ^Player, card_idx: int, opponent: ^Player) {
         }
 
         break
+    case .CLUBS:
+        // choose random card to disable
+        card_idx := rand.int_max(len(opponent.card_hand))
+        card_to_disable := &opponent.card_hand[card_idx]
+
+        card_to_disable.remaining_disabled_turns = get_card_effectiveness(card^)
     case: 
         ordered_remove(&player.card_hand, card_idx)
     }

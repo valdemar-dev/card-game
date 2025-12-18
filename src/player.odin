@@ -1,7 +1,10 @@
 package main
 
 pass_turn_to :: proc(player: ^Player) {
-    turn_count += 1
+    // a full turn has occured.
+    if player == first_turn_holder{
+        increment_turn()
+    }
 
     if player == &cpu {
         game_state = .CPU_CHOOSE_CARD
