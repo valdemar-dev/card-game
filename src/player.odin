@@ -16,7 +16,7 @@ pass_turn_to :: proc(player: ^Player) {
 }
 
 start_player_turn :: proc(player: ^Player) {
-    player^.gold = min(turn_count, 10)
+    player^.gold = clamp(turn_count, 2, 10)
 
     for i := 0; i < 3 && len(player.card_hand) < 7; i += 1 {
         append(&(player^.card_hand), get_random_card())

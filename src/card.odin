@@ -22,12 +22,12 @@ get_card_effectiveness :: proc(card: Card) -> (value: int) {
         value = int(math.floor(f32(card.value) / 3)) + 1
         break
     case .HEARTS:
-        value = int(math.floor(f32(card.value) / 4))
+        value = max(int(math.floor(f32(card.value) / 4)), 1)
         break
     case .CLUBS:
-        value = int(math.floor(f32(card.value) / 4))
+        value = max(int(math.floor(f32(card.value) / 4)), 1)
     case .DIAMONDS:
-        value = int(math.floor(f32(card.value) / 5))
+        value = max(int(math.floor(f32(card.value) / 5)), 1)
     }
 
     return
@@ -42,7 +42,7 @@ get_card_cost :: proc(card: Card) -> int {
 get_random_card :: proc() -> Card {
     return Card{
         house=rand.choice_enum(CardHouse),
-        value=rand.int_max(13),
+        value=rand.int_max(12)+1,
     }
 }
 
@@ -54,7 +54,7 @@ use_card :: proc(player: ^Player, card_idx: int, opponent: ^Player) {
     card_cost := get_card_cost(card^)
     player.gold -= card_cost
 
-    fmt.println(player.name, "USED CARD:", card, "FOR COST:", card_cost)
+    fmt.println(player.name, "using card:", card.value, card.house)
 
     #partial switch card.house {
     case .SPADES:
@@ -66,14 +66,39 @@ use_card :: proc(player: ^Player, card_idx: int, opponent: ^Player) {
             game_state = .CPU_CHOOSE_DEFENCE_CARD
         }
 
+        fmt.println(player.name, "begun an attack on", opponent.name, "using a spade card.")
+
         break
     case .CLUBS:
         // choose random card to disable
-        card_idx := rand.int_max(len(opponent.card_hand))
-        card_to_disable := &opponent.card_hand[card_idx]
+        disabled_card_idx := rand.int_max(len(opponent.card_hand))
+        card_to_disable := &opponent.card_hand[disabled_card_idx]
 
         card_to_disable.remaining_disabled_turns = get_card_effectiveness(card^)
-    case: 
+
+        fmt.println(player.name, "used a clubs card, and disabled card with index:", disabled_card_idx)
+
         ordered_remove(&player.card_hand, card_idx)
+
+        break
+    case .HEARTS:
+        effectiveness := get_card_effectiveness(card^)
+        player^.crown_health = clamp(player.crown_health + effectiveness, 0, MAX_HEALTH)
+
+        fmt.println(player.name, "used a hearts card, and healed themselves for", effectiveness, "health. (clamped)")
+
+        ordered_remove(&player.card_hand, card_idx)
+
+        break
+    case .DIAMONDS:
+        gold := get_card_effectiveness(card^)
+        player^.gold = clamp(player.gold + gold, 0, MAX_GOLD)
+
+        fmt.println(player.name, "used a diamonds card, and got", gold, "gold (clamped).")
+
+        ordered_remove(&player.card_hand, card_idx)
+
+        break
     }
+
 }

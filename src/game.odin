@@ -19,6 +19,10 @@ GameState :: enum {
     GAME_OVER,
 }
 
+MAX_GOLD :: 15
+MAX_HEALTH :: 20
+STARTING_HEALTH :: 15
+
 game_state : GameState = .MAIN_MENU
 
 turn_count : int
@@ -44,7 +48,7 @@ start_game :: proc() {
             append(&cpu.card_hand, get_random_card())
         }
 
-        cpu.crown_health = 15
+        cpu.crown_health = STARTING_HEALTH
         cpu.name = "CPU"
     }
 
@@ -55,11 +59,12 @@ start_game :: proc() {
             append(&user.card_hand, get_random_card())
         }
 
-        user.crown_health = 15
+        user.crown_health = STARTING_HEALTH
         user.name = "USER"
     }
 
     game_state = .PLAYER_CHOOSE_CARD
+    start_player_turn(&user)
 
     game_thread = thread.create(tick_game)
     thread.start(game_thread)

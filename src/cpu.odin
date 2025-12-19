@@ -22,7 +22,7 @@ cpu_choose_card :: proc() {
         pass_turn_to(&user)
         
         fmt.println("CPU PASSING TURN TO USER")
-        
+
         return
     }
 
@@ -37,6 +37,8 @@ cpu_choose_card :: proc() {
 cpu_choose_defence_card :: proc() {}
 
 cpu_finish_attack :: proc() {
+    time.sleep(time.Second * 2)
+
     attack_card := &cpu.card_hand[cpu.battle_card_idx]
     defer cpu.battle_card_idx = -1
     defer ordered_remove(&cpu.card_hand, cpu.battle_card_idx)
@@ -54,17 +56,21 @@ cpu_finish_attack :: proc() {
     fmt.println("CPU ATTACK CARD:", attack_card)
     fmt.println("USER DEFENCE CARD:", defence_card)
 
+    time.sleep(time.Second * 2)
+
     damage := max(attack - defence, 0)
 
     user.crown_health -= damage
 
     fmt.println("USER TAKES", damage, "DAMAGE")
 
-    game_state = .CPU_CHOOSE_CARD
+    time.sleep(time.Second * 2)
 
     if user.crown_health < 1 {
         end_game(.GAME_OVER)
 
         return
     }
+
+    game_state = .CPU_CHOOSE_CARD
 }
