@@ -16,7 +16,9 @@ tick_input :: proc() {
         if rl.IsKeyPressed(.ENTER) {
             fmt.println("passing turn to cpu..")
             
-            pass_turn_to(&cpu)
+            append(&tasks, proc() {
+                pass_turn_to(&cpu)
+            })
         }
 
         break

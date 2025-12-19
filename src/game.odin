@@ -91,6 +91,8 @@ tick_game :: proc(thread: ^thread.Thread) {
             for task, index in tasks {
                 task()
 
+                fmt.println("did a task")
+
                 unordered_remove(&tasks, index)
             }
         }
