@@ -25,11 +25,12 @@ tick_input :: proc() {
 
         break
     case .USER_CHOOSE_DEFENCE_CARD:
+        if rl.IsMouseButtonPressed(.LEFT) {
+            user_try_set_defence_card()
+        }
+
+        // forfeit the attack and set no defence card
         if rl.IsKeyPressed(.ENTER) {
-            fmt.println("(temp) PLAYER CHOOSING RAND CARD TO DEFEND WITH")
-
-            user_set_battle_card()
-
             game_state = .CPU_ATTACK_FINISH
         }
     }

@@ -17,7 +17,7 @@ Card :: struct {
 }
 
 get_card_effectiveness :: proc(card: Card) -> (value: int) {
-    #partial switch card.house {
+    switch card.house {
     case .SPADES:
         value = int(math.floor(f32(card.value) / 3)) + 1
         break
@@ -28,6 +28,23 @@ get_card_effectiveness :: proc(card: Card) -> (value: int) {
         value = max(int(math.floor(f32(card.value) / 4)), 1)
     case .DIAMONDS:
         value = max(int(math.floor(f32(card.value) / 5)), 1)
+    }
+
+    return
+}
+
+get_card_defensive_value :: proc(card: Card) -> (value: int) {
+    switch card.house {
+    case .SPADES:
+        value = int(math.floor(f32(card.value) / 3)) + 1
+        break
+    case .HEARTS:
+        value = int(math.floor(f32(card.value) / 4)) + 1
+        break
+    case .CLUBS:
+        value = int(math.floor(f32(card.value) / 4)) + 1
+    case .DIAMONDS:
+        value = int(math.floor(f32(card.value) / 4)) + 1
     }
 
     return
