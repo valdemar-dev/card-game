@@ -20,9 +20,7 @@ tick_input :: proc() {
         if rl.IsKeyPressed(.ENTER) {
             fmt.println("passing turn to cpu..")
             
-            append(&tasks, proc() {
-                pass_turn_to(&cpu)
-            })
+            game_state = .DO_PASS_TURN
         }
 
         break

@@ -11,6 +11,8 @@ GameState :: enum {
     USER_CHOOSE_CARD,
     USER_ATTACK_FINISH,
     CPU_CHOOSE_DEFENCE_CARD,
+
+    DO_PASS_TURN,
     
     CPU_CHOOSE_CARD,
     CPU_ATTACK_FINISH,
@@ -69,6 +71,9 @@ start_game :: proc() {
     game_thread = thread.create(tick_game)
     thread.start(game_thread)
 
+    prev_turn_holder = &cpu
+    turn_holder = &user
+
     first_turn_holder = &user
 }
 
@@ -99,14 +104,19 @@ tick_game :: proc(thread: ^thread.Thread) {
 
         // cpu ai, if needed
         #partial switch game_state {
+        case .DO_PASS_TURN:
+            pass_turn_to(prev_turn_holder)
+
+            break
         case .CPU_CHOOSE_CARD:
             cpu_choose_card()
+
             break
         case .CPU_ATTACK_FINISH:
             did_kill := finish_attack(&cpu, &user)
 
             if did_kill {
-                game_state =.USER_CHOOSE_DEFENCE_CARD
+                game_state = .GAME_OVER
             } else {
                 game_state = .CPU_CHOOSE_CARD
             }
@@ -114,6 +124,17 @@ tick_game :: proc(thread: ^thread.Thread) {
             break
         case .CPU_CHOOSE_DEFENCE_CARD:
             cpu_choose_defence_card()
+
+            break
+        case .USER_ATTACK_FINISH:
+            did_kill := finish_attack(&user, &cpu)
+
+            if did_kill {
+                game_state = .GAME_OVER
+            } else {
+                game_state = .USER_CHOOSE_CARD
+            }
+
             break
         }
     }

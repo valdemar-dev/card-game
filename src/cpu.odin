@@ -19,7 +19,7 @@ cpu_choose_card :: proc() {
     }
 
     if len(affordable_cards) == 0 {
-        pass_turn_to(&user)
+        game_state = .DO_PASS_TURN
         
         fmt.println("CPU PASSING TURN TO USER")
 
