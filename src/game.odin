@@ -142,18 +142,6 @@ tick_game :: proc(thread: ^thread.Thread) {
 
 increment_turn :: proc() {
     turn_count += 1
-
-    for &card in user.card_hand {
-        if card.remaining_disabled_turns > 0 {
-            card.remaining_disabled_turns -= 1
-        }
-    }
-
-    for &card in cpu.card_hand {
-        if card.remaining_disabled_turns > 0 {
-            card.remaining_disabled_turns -= 1
-        }
-    }
 }
 
 end_game :: proc(state: GameState) {

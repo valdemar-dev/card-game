@@ -32,6 +32,12 @@ end_player_turn :: proc(player: ^Player) {
 
         append(&(player^.card_hand), get_random_card())
     }
+
+    for &card in player.card_hand {
+        if card.remaining_disabled_turns > 0 {
+            card.remaining_disabled_turns -= 1
+        }
+    }
 }
 
 start_player_turn :: proc(player: ^Player) {
