@@ -34,43 +34,8 @@ cpu_choose_card :: proc() {
     }
 }
 
-cpu_choose_defence_card :: proc() {}
+cpu_choose_defence_card :: proc() {
+    cpu.battle_card_idx = rand.int_max(len(cpu.card_hand)-1)
 
-cpu_finish_attack :: proc() {
-    time.sleep(time.Second * 2)
-
-    attack_card := &cpu.card_hand[cpu.battle_card_idx]
-    defer cpu.battle_card_idx = -1
-    defer ordered_remove(&cpu.card_hand, cpu.battle_card_idx)
-
-    defence_card := &user.card_hand[user.battle_card_idx]
-    defer user.battle_card_idx = -1
-    defer ordered_remove(&user.card_hand, user.battle_card_idx)
-
-    if defence_card.remaining_disabled_turns > 0 do panic("Disabled card used at defence card for user.")
-    if attack_card.remaining_disabled_turns > 0 do panic("Disabled card used at attack card for cpu.")
-    
-    attack := get_card_effectiveness(attack_card^)
-    defence := int(f32(get_card_effectiveness(defence_card^)) / 2)
-
-    fmt.println("CPU ATTACK CARD:", attack_card)
-    fmt.println("USER DEFENCE CARD:", defence_card)
-
-    time.sleep(time.Second * 2)
-
-    damage := max(attack - defence, 0)
-
-    user.crown_health -= damage
-
-    fmt.println("USER TAKES", damage, "DAMAGE")
-
-    time.sleep(time.Second * 2)
-
-    if user.crown_health < 1 {
-        end_game(.GAME_OVER)
-
-        return
-    }
-
-    game_state = .CPU_CHOOSE_CARD
+    game_state = .USER_ATTACK_FINISH
 }

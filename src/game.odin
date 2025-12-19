@@ -8,13 +8,13 @@ import rl "vendor:raylib"
 GameState :: enum {
     MAIN_MENU,
 
-    PLAYER_CHOOSE_CARD,
-    PLAYER_ATTACK_FINISH,
+    USER_CHOOSE_CARD,
+    USER_ATTACK_FINISH,
     CPU_CHOOSE_DEFENCE_CARD,
     
     CPU_CHOOSE_CARD,
     CPU_ATTACK_FINISH,
-    PLAYER_CHOOSE_DEFENCE_CARD,
+    USER_CHOOSE_DEFENCE_CARD,
 
     GAME_OVER,
 }
@@ -63,7 +63,7 @@ start_game :: proc() {
         user.name = "USER"
     }
 
-    game_state = .PLAYER_CHOOSE_CARD
+    game_state = .USER_CHOOSE_CARD
     start_player_turn(&user)
 
     game_thread = thread.create(tick_game)
@@ -103,7 +103,14 @@ tick_game :: proc(thread: ^thread.Thread) {
             cpu_choose_card()
             break
         case .CPU_ATTACK_FINISH:
-            cpu_finish_attack()
+            did_kill := finish_attack(&cpu, &user)
+
+            if did_kill {
+                game_state =.USER_CHOOSE_DEFENCE_CARD
+            } else {
+                game_state = .CPU_CHOOSE_CARD
+            }
+
             break
         case .CPU_CHOOSE_DEFENCE_CARD:
             cpu_choose_defence_card()

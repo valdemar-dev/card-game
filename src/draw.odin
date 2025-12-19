@@ -41,6 +41,8 @@ draw_cards :: proc() {
 
     // user cards
     {
+        clear(&user_card_click_rects)
+
         user_card_pos := rl.Vector2{
             padding_x,
             height - card_height - padding_y,
@@ -59,6 +61,8 @@ draw_cards :: proc() {
                 card_width,
                 card_height,
             }
+
+            append(&user_card_click_rects, dst)
 
             color := card.remaining_disabled_turns > 0 ? rl.GRAY : rl.WHITE
 

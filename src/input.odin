@@ -12,7 +12,11 @@ tick_input :: proc() {
         }
 
         break
-    case .PLAYER_CHOOSE_CARD:
+    case .USER_CHOOSE_CARD:
+        if rl.IsMouseButtonPressed(.LEFT) {
+            user_try_use_card()
+        }
+        
         if rl.IsKeyPressed(.ENTER) {
             fmt.println("passing turn to cpu..")
             
@@ -22,7 +26,7 @@ tick_input :: proc() {
         }
 
         break
-    case .PLAYER_CHOOSE_DEFENCE_CARD:
+    case .USER_CHOOSE_DEFENCE_CARD:
         if rl.IsKeyPressed(.ENTER) {
             fmt.println("(temp) PLAYER CHOOSING RAND CARD TO DEFEND WITH")
 

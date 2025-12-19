@@ -61,7 +61,7 @@ use_card :: proc(player: ^Player, card_idx: int, opponent: ^Player) {
         player^.battle_card_idx = card_idx
 
         if opponent == &user {
-            game_state = .PLAYER_CHOOSE_DEFENCE_CARD
+            game_state = .USER_CHOOSE_DEFENCE_CARD
         } else {
             game_state = .CPU_CHOOSE_DEFENCE_CARD
         }
