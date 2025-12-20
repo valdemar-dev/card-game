@@ -15,7 +15,7 @@ cpu_choose_card :: proc() {
 
     for card, index in cpu.card_hand {
         cost := get_card_cost(card)
-        if cost <= cpu.gold do append(&affordable_cards, index)
+        if cost <= cpu.gold && card.remaining_disabled_turns == 0 do append(&affordable_cards, index)
     }
 
     if len(affordable_cards) == 0 {
@@ -35,7 +35,16 @@ cpu_choose_card :: proc() {
 }
 
 cpu_choose_defence_card :: proc() {
-    cpu.battle_card_idx = rand.int_max(len(cpu.card_hand)-1)
+    enabled_cards : [dynamic]int
+    defer delete(enabled_cards)
+    {
+        for card, i in cpu.card_hand {
+            if card.remaining_disabled_turns > 0 do continue
+            append(&enabled_cards, i)
+        }
+    }
+
+    cpu.battle_card_idx = rand.choice(enabled_cards[:])
 
     game_state = .USER_ATTACK_FINISH
 }

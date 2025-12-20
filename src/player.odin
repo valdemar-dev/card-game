@@ -55,8 +55,8 @@ finish_attack :: proc(player: ^Player, target: ^Player) -> (did_kill: bool) {
     defer target.battle_card_idx = -1
     defer if target.battle_card_idx != -1 do ordered_remove(&target.card_hand, target.battle_card_idx)
 
-    if defence_card.remaining_disabled_turns > 0 do panic("Disabled card used at defence card for user.")
-    if attack_card.remaining_disabled_turns > 0 do panic("Disabled card used at attack card for cpu.")
+    if defence_card.remaining_disabled_turns > 0 do panic("Disabled card used at defence card")
+    if attack_card.remaining_disabled_turns > 0 do panic("Disabled card used at attack card")
     
     attack := get_card_effectiveness(attack_card^)
     defence := defence_card == nil ? 0 : get_card_defensive_value(defence_card^)

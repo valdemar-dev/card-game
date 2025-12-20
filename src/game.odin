@@ -77,30 +77,19 @@ start_game :: proc() {
     first_turn_holder = &user
 }
 
-tasks : [dynamic]proc()
 tick_game :: proc(thread: ^thread.Thread) {
     last_time : f64
 
     desired_frame_time : f64 = 1 / 60
 
     for {
-        // simple task system
-        {
-            current_time := rl.GetTime()
+        current_time := rl.GetTime()
 
-            delta := current_time - last_time
-            if delta < desired_frame_time {
-                time.sleep(time.Duration(desired_frame_time - delta) * time.Second)
-            }
-
-            for task, index in tasks {
-                task()
-
-                fmt.println("did a task")
-
-                unordered_remove(&tasks, index)
-            }
+        delta := current_time - last_time
+        if delta < desired_frame_time {
+            time.sleep(time.Duration(desired_frame_time - delta) * time.Second)
         }
+
 
         // cpu ai, if needed
         #partial switch game_state {
